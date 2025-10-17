@@ -3,6 +3,7 @@ package ru.spb.taranenkoant.order.domain.model;
 
 import ru.spb.taranenkoant.order.domain.exception.IllegalOrderOperationException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +18,9 @@ public class Order {
     private List<OrderItem> items;
     private OrderStatus status;
     private Money totalPrice;
+    private Money discount;
+    private Money finalAmount;
 
-    // Статический фабричный метод
     public static Order create(CustomerId customerId, List<OrderItem> items) {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Order must have at least one item");
@@ -30,19 +32,36 @@ public class Order {
         order.items = new ArrayList<>(items);
         order.status = OrderStatus.PENDING;
         order.totalPrice = calculateTotalPrice(items);
+        order.discount = Money.ZERO;
+        order.finalAmount = order.totalPrice;
 
         return order;
     }
 
+    public void applyDiscount(Money discount) {
+        if (discount.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalOrderOperationException("Скидка не может быть отрицательной");
+        }
+
+        if (discount.getAmount().compareTo(totalPrice.getAmount()) > 0) {
+            throw new IllegalOrderOperationException("Скидка не может превышать сумму заказа");
+        }
+
+        this.discount = discount;
+        this.finalAmount = totalPrice.subtract(discount);
+    }
+
     // Метод для восстановления из базы данных (если нужен)
     public static Order restore(OrderId id, CustomerId customerId, List<OrderItem> items,
-                                OrderStatus status, Money totalPrice) {
+                                OrderStatus status, Money totalPrice, Money discount, Money finalAmount) {
         Order order = new Order();
         order.id = id;
         order.customerId = customerId;
         order.items = new ArrayList<>(items);
         order.status = status;
         order.totalPrice = totalPrice;
+        order.discount = discount;
+        order.finalAmount = finalAmount;
         return order;
     }
 
@@ -98,5 +117,13 @@ public class Order {
     }
     public Money getTotalPrice() {
         return totalPrice;
+    }
+
+    public Money getDiscount() {
+        return discount;
+    }
+
+    public Money getFinalAmount() {
+        return finalAmount;
     }
 }

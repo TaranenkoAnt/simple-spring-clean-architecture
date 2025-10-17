@@ -24,8 +24,9 @@ public class OrderEntityMapper {
         entity.setStatus(order.getStatus());
         entity.setTotalAmount(order.getTotalPrice().getAmount());
         entity.setCurrency(order.getTotalPrice().getCurrency().getCurrencyCode());
+        entity.setDiscountAmount(order.getDiscount().getAmount());
+        entity.setFinalAmount(order.getFinalAmount().getAmount());
 
-        // Маппинг items
         List<OrderItemEntity> itemEntities = order.getItems().stream()
                 .map(this::toItemEntity)
                 .collect(Collectors.toList());
@@ -46,7 +47,9 @@ public class OrderEntityMapper {
                 CustomerId.of(entity.getCustomerId()),
                 items,
                 entity.getStatus(),
-                Money.of(entity.getTotalAmount(), Currency.getInstance(entity.getCurrency()))
+                Money.of(entity.getTotalAmount(), Currency.getInstance(entity.getCurrency())),
+                Money.of(entity.getDiscountAmount(), Currency.getInstance(entity.getCurrency())),
+                Money.of(entity.getFinalAmount(), Currency.getInstance(entity.getCurrency()))
         );
     }
 

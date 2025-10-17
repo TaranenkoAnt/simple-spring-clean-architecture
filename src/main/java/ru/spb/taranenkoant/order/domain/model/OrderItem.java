@@ -17,7 +17,7 @@ public class OrderItem {
             throw new IllegalArgumentException("id товара не может быть пустым");
         }
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Стоимость не может быть отрицательной");
+            throw new IllegalArgumentException("Количество должно быть положительным");
         }
         if (price == null) {
             throw new IllegalArgumentException("Цена не может отсутствовать");

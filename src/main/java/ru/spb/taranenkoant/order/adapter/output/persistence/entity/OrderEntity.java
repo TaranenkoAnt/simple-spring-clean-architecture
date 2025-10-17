@@ -32,6 +32,12 @@ public class OrderEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItemEntity> items;
 
+    @Column(name = "discount_amount")
+    private BigDecimal discountAmount;
+
+    @Column(name = "final_amount")
+    private BigDecimal finalAmount;
+
 
     public String getId() {
         return id;
@@ -79,5 +85,21 @@ public class OrderEntity {
 
     public void setItems(List<OrderItemEntity> items) {
         this.items = items;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public BigDecimal getFinalAmount() {
+        return finalAmount;
+    }
+
+    public void setFinalAmount(BigDecimal finalAmount) {
+        this.finalAmount = finalAmount;
     }
 }

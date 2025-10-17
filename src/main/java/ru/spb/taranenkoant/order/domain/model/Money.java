@@ -42,6 +42,17 @@ public class Money {
         return new Money(this.amount.add(other.amount), this.currency);
     }
 
+    public Money negate() {
+        return new Money(this.amount.negate(), this.currency);
+    }
+
+    public Money subtract(Money other) {
+        if (!this.currency.equals(other.currency)) {
+            throw new IllegalArgumentException("Нельзя вычитать разные валюты");
+        }
+        return new Money(this.amount.subtract(other.amount), this.currency);
+    }
+
     public Money multiply(int multiplier) {
         return new Money(this.amount.multiply(BigDecimal.valueOf(multiplier)), this.currency);
     }
