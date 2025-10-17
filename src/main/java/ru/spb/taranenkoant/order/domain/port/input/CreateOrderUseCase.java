@@ -1,7 +1,7 @@
 package ru.spb.taranenkoant.order.domain.port.input;
 
 
-import ru.spb.taranenkoant.order.application.service.CreateOrderCommand;
+import ru.spb.taranenkoant.order.application.dto.CreateOrderCommand;
 import ru.spb.taranenkoant.order.domain.model.OrderId;
 
 /**
